@@ -29,16 +29,19 @@
   },
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
-    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
+    "schema/*.json"
   ],
   "jupyterlab": {
-    "extension": true
+    "extension": true,
+    "schemaDir": "schema"
   },
   "dependencies": {
     "@jupyterlab/application": "^2.0.1",
     "@jupyterlab/cells": "^2.0.1",
     "@jupyterlab/codemirror": "^2.0.1",
     "@jupyterlab/notebook": "^2.0.1",
+    "@jupyterlab/settingregistry": "^2.0.0",
     "@lumino/commands": "^1.10.1",
     "@lumino/coreutils": "^1.4.2",
     "@lumino/domutils": "^1.1.7",

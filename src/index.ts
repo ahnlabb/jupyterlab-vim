@@ -9,6 +9,10 @@ import {
 } from '@jupyterlab/notebook';
 
 import {
+    ISettingRegistry
+} from '@jupyterlab/settingregistry';
+
+import {
     MarkdownCell
 } from '@jupyterlab/cells';
 
@@ -38,10 +42,10 @@ const IS_MAC = !!navigator.platform.match(/Mac/i);
  * Initialization data for the jupyterlab_vim extension.
  */
 const extension: JupyterFrontEndPlugin<void> = {
-    id: 'jupyterlab_vim',
+    id: 'jupyterlab_vim:vim',
     autoStart: true,
     activate: activateCellVim,
-    requires: [INotebookTracker]
+    requires: [INotebookTracker, ISettingRegistry]
 };
 
 class VimCell {
@@ -191,10 +195,15 @@ class VimCell {
     private _app: JupyterFrontEnd;
 }
 
-function activateCellVim(app: JupyterFrontEnd, tracker: INotebookTracker): Promise<void> {
+function activateCellVim(app: JupyterFrontEnd, tracker: INotebookTracker, settingRegistry: ISettingRegistry): Promise<void> {
+    const { commands, shell } = app;
 
-    Promise.all([app.restored]).then(([args]) => {
-        const { commands, shell } = app;
+
+    Promise.all([settingRegistry.load(extension.id), app.restored]).then(([settings, args]) => {
+        const enabled = settings.get('enable').composite as boolean;
+        if (enabled === false) {
+            return;
+        }
         function getCurrent(args: ReadonlyPartialJSONObject): NotebookPanel | null {
             const widget = tracker.currentWidget;
             const activate = args['activate'] !== false;
